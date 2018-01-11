@@ -25,6 +25,7 @@ dependencies {
     implementation ('io.socket:socket.io-client:0.8.3'){
         exclude group: 'org.json', module: 'json'
     }
+    implementation 'com.android.support:design:26.1.0'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
