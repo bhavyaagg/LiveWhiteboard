@@ -1,5 +1,6 @@
 package com.example.apoorvaagupta.livewhiteboard;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -22,10 +23,11 @@ import io.socket.client.Socket;
  */
 
 public class CanvasView extends View {
+    public static final String TAG = "hey there";
 
     public int width;
     public int height;
-    private Bitmap bitmap;
+    private Bitmap bitmap = null;
     private Canvas canvas;
     private Path path;
     Context context;
@@ -54,17 +56,38 @@ public class CanvasView extends View {
         this.height = height;
     }
 
+    public void updateCanvas(Bitmap bitmap) {
+        Log.d(TAG, "updateCanvas: " + bitmap);
+        Bitmap mutableBitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true);
+        this.bitmap = mutableBitmap;
+//        canvas.drawBitmap(mutableBitmap,0,0,paint);
+//        canvas = new Canvas(mutableBitmap);
+        Log.d(TAG, "updateCanvas: ");
+//        super.onDraw(canvas);
+        invalidate();
+    }
+
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
+        Log.d(TAG, "onSizeChanged: " + bitmap);
         bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
         canvas = new Canvas(bitmap);
+        this.bitmap = null;
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+        if (this.bitmap != null) {
+            Log.d(TAG, "onDraw: " + bitmap);
+            canvas.drawBitmap(this.bitmap, 0, 0, paint);
+            this.bitmap = null;
+            Log.d(TAG, "onDraw: " + bitmap);
+        }
         canvas.drawPath(path, paint);
+
+
     }
 
     public void clearCanvas() {
