@@ -63,16 +63,9 @@ public class CanvasView extends View {
     }
 
     public Bitmap getBitmap(){
-//        this.destroyDrawingCache();
-//        this.buildDrawingCache();
-//        return this.getDrawingCache();
-
-        //this.setDrawingCacheEnabled(true);
+        this.destroyDrawingCache();
         this.buildDrawingCache();
-        Bitmap bmp = Bitmap.createBitmap(this.getDrawingCache());
-        //this.setDrawingCacheEnabled(false);
-
-        return bmp;
+        return this.getDrawingCache();
     }
 
     public void setDimensions(int width, int height) {
