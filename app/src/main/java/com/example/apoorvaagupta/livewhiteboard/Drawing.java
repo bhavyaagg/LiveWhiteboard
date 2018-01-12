@@ -32,7 +32,7 @@ public static final String TAG = "**********************";
 
                 Bitmap bitmap = drawing_canvas.getBitmap();
 
-                Log.d(TAG, "onClick: " + bitmap);
+//                Log.d(TAG, "onClick: " + bitmap);
 
                 ByteArrayOutputStream stream = new ByteArrayOutputStream();
                 bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
@@ -42,9 +42,9 @@ public static final String TAG = "**********************";
 
                 try {
                     Bitmap dbitmap = deserialize(bitmapdata);
-                    Log.d(TAG, "onClick:"+ dbitmap);
+//                    Log.d(TAG, "onClick:"+ dbitmap);
                     drawing_canvas.drawFromBitmap(dbitmap);
-                    Log.d(TAG, "onClick: called update" );
+//                    Log.d(TAG, "onClick: called update" );
                 } catch (IOException e) {
                     e.printStackTrace();
                 } catch (ClassNotFoundException e) {
