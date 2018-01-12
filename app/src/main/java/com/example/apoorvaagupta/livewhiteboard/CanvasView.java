@@ -18,6 +18,8 @@ import android.view.View;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
 import io.socket.client.Socket;
 
 /**
@@ -32,6 +34,7 @@ public class CanvasView extends View {
     private Bitmap bitmap;
     private Canvas canvas;
     private Path path;
+    private ArrayList<Stroke> allStrokes = new ArrayList<>();
     Context context;
     private Paint paint;
     private Socket socket;
@@ -45,24 +48,19 @@ public class CanvasView extends View {
         this.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
         path = new Path();
 
-        paint = new Paint();
-        paint.setAntiAlias(true);
-        paint.setColor(Color.BLACK);
-        paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeJoin(Paint.Join.ROUND);
-        paint.setStrokeWidth(4f);
+        createPaintObject();
 
     }
 
-    public void changeColor(int color){
+    public void changeColor(int color) {
         paint.setColor(color);
     }
 
-    public void setEraser(){
+    public void setEraser() {
 //        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
     }
 
-    public Bitmap getBitmap(){
+    public Bitmap getBitmap() {
         this.destroyDrawingCache();
         this.buildDrawingCache();
         return this.getDrawingCache();
@@ -99,13 +97,19 @@ public class CanvasView extends View {
         super.onDraw(canvas);
 //        if (this.bitmap != null) {
 //            Log.d(TAG, "onDraw: " + bitmap);
-            canvas.drawBitmap(this.bitmap, 0, 0, paint);
+        canvas.drawBitmap(this.bitmap, 0, 0, paint);
+
 //        Log.d(TAG, "onDraw: drawn" + bitmap);
 //            this.bitmap = null;
 //            Log.d(TAG, "onDraw: " + bitmap);
 //        }
 
         canvas.drawPath(path, paint);
+
+
+        for (Stroke s : allStrokes) {
+            canvas.drawPath(s.getPath(), s.getPaint());
+        }
 
 
     }
@@ -177,10 +181,22 @@ public class CanvasView extends View {
                 break;
             case MotionEvent.ACTION_UP:
                 upTouch(x, y);
+                allStrokes.add(new Stroke(path, paint));
+                path = new Path();
+                createPaintObject();
                 invalidate();
                 break;
         }
         return true;
+    }
+
+    private void createPaintObject() {
+        paint = new Paint();
+        paint.setAntiAlias(true);
+        paint.setColor(Color.BLACK);
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setStrokeJoin(Paint.Join.ROUND);
+        paint.setStrokeWidth(4f);
     }
 
     private JSONObject getJsonObject(float x, float y) throws JSONException {
@@ -191,6 +207,28 @@ public class CanvasView extends View {
         jsonObject.put("y1", y / getHeight());
 
         return jsonObject;
+    }
+
+    public class Stroke {
+        private Path path;
+
+        private Paint paint;
+
+        public Stroke(Path path, Paint paint) {
+
+            this.path = path;
+            this.paint = paint;
+        }
+
+        public Path getPath() {
+            return path;
+        }
+
+        public Paint getPaint() {
+            return paint;
+        }
+
+
     }
 
 }
