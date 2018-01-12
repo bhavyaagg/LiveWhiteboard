@@ -7,6 +7,8 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -52,10 +54,25 @@ public class CanvasView extends View {
 
     }
 
+    public void changeColor(int color){
+        paint.setColor(color);
+    }
+
+    public void setEraser(){
+//        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
+    }
+
     public Bitmap getBitmap(){
-        this.destroyDrawingCache();
+//        this.destroyDrawingCache();
+//        this.buildDrawingCache();
+//        return this.getDrawingCache();
+
+        //this.setDrawingCacheEnabled(true);
         this.buildDrawingCache();
-        return this.getDrawingCache();
+        Bitmap bmp = Bitmap.createBitmap(this.getDrawingCache());
+        //this.setDrawingCacheEnabled(false);
+
+        return bmp;
     }
 
     public void setDimensions(int width, int height) {
@@ -102,6 +119,8 @@ public class CanvasView extends View {
 
     public void clearCanvas() {
         path.reset();
+        bitmap = Bitmap.createBitmap(getWidth(), getHeight(), Bitmap.Config.ARGB_8888);
+        canvas = new Canvas(bitmap);
         invalidate();
     }
 

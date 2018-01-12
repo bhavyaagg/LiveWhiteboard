@@ -21,37 +21,44 @@
         android:layout_height="wrap_content">
 
         <ImageButton
+            android:id="@+id/ibBlack"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:src="@drawable/ic_brush_black_36dp" />
 
         <ImageButton
+            android:id="@+id/ibRed"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:src="@drawable/ic_brush_red_600_36dp" />
         <ImageButton
+            android:id="@+id/ibBlue"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:src="@drawable/ic_brush_blue_700_36dp" />
         <ImageButton
+            android:id="@+id/ibGreen"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:src="@drawable/ic_brush_green_700_36dp" />
         <ImageButton
+            android:id="@+id/ibEraser"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:src="@drawable/eraser" />
         <ImageButton
+            android:id="@+id/ibSave"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:src="@drawable/ic_save_blue_grey_700_36dp" />
         <ImageButton
+            android:id="@+id/ibClear"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"

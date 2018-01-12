@@ -3,12 +3,14 @@ package com.example.apoorvaagupta.livewhiteboard;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import java.io.ByteArrayInputStream;
@@ -19,18 +21,29 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 
 public class Drawing extends AppCompatActivity {
-public static final String TAG = "**********************";
+public static final String TAG = "drawing";
+
+ImageButton ibBlack, ibRed, ibGreen, ibBlue, ibEraser, ibSave, ibClear;
+CanvasView drawingCanvas;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_drawing);
-        Button btnsave = findViewById(R.id.btnsave);
-        final CanvasView drawing_canvas = findViewById(R.id.drawing_canvas);
-        btnsave.setOnClickListener(new View.OnClickListener() {
+
+        ibBlack = findViewById(R.id.ibBlack);
+        ibRed = findViewById(R.id.ibRed);
+        ibGreen = findViewById(R.id.ibGreen);
+        ibBlue = findViewById(R.id.ibBlue);
+        ibEraser = findViewById(R.id.ibEraser);
+        ibSave = findViewById(R.id.ibSave);
+        ibClear = findViewById(R.id.ibClear);
+
+        drawingCanvas = findViewById(R.id.drawing_canvas);
+        ibSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                Bitmap bitmap = drawing_canvas.getBitmap();
+                Bitmap bitmap = drawingCanvas.getBitmap();
 
 //                Log.d(TAG, "onClick: " + bitmap);
 
@@ -38,12 +51,12 @@ public static final String TAG = "**********************";
                 bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
                 byte[] bitmapdata = stream.toByteArray();
 
-                drawing_canvas.clearCanvas();
+                drawingCanvas.clearCanvas();
 
                 try {
                     Bitmap dbitmap = deserialize(bitmapdata);
 //                    Log.d(TAG, "onClick:"+ dbitmap);
-                    drawing_canvas.drawFromBitmap(dbitmap);
+                    drawingCanvas.drawFromBitmap(dbitmap);
 //                    Log.d(TAG, "onClick: called update" );
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -79,6 +92,48 @@ public static final String TAG = "**********************";
 
 
 
+            }
+        });
+
+        ibBlack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                drawingCanvas.changeColor(Color.BLACK);
+            }
+        });
+
+        ibRed.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                drawingCanvas.changeColor(Color.RED);
+            }
+        });
+
+        ibBlue.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                drawingCanvas.changeColor(Color.BLUE);
+            }
+        });
+
+        ibGreen.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                drawingCanvas.changeColor(Color.GREEN);
+            }
+        });
+
+        ibEraser.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                drawingCanvas.setEraser();
+            }
+        });
+
+        ibClear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                drawingCanvas.clearCanvas();
             }
         });
 
