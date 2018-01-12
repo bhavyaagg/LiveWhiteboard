@@ -27,7 +27,7 @@ public class CanvasView extends View {
 
     public int width;
     public int height;
-    private Bitmap bitmap = null;
+    private Bitmap bitmap;
     private Canvas canvas;
     private Path path;
     Context context;
@@ -39,7 +39,8 @@ public class CanvasView extends View {
     public CanvasView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         this.context = context;
-
+        this.setDrawingCacheEnabled(true);
+        this.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
         path = new Path();
 
         paint = new Paint();
@@ -51,18 +52,25 @@ public class CanvasView extends View {
 
     }
 
+    public Bitmap getBitmap(){
+        this.destroyDrawingCache();
+        this.buildDrawingCache();
+        return this.getDrawingCache();
+    }
+
     public void setDimensions(int width, int height) {
         this.width = width;
         this.height = height;
     }
 
-    public void updateCanvas(Bitmap bitmap) {
+    public void drawFromBitmap(Bitmap bitmap) {
         Log.d(TAG, "updateCanvas: " + bitmap);
         Bitmap mutableBitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true);
         this.bitmap = mutableBitmap;
 //        canvas.drawBitmap(mutableBitmap,0,0,paint);
 //        canvas = new Canvas(mutableBitmap);
         Log.d(TAG, "updateCanvas: ");
+        Log.d(TAG, "drawFromBitmap: "+ this.bitmap);
 //        super.onDraw(canvas);
         invalidate();
     }
@@ -73,18 +81,20 @@ public class CanvasView extends View {
         Log.d(TAG, "onSizeChanged: " + bitmap);
         bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
         canvas = new Canvas(bitmap);
-        this.bitmap = null;
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
+
         super.onDraw(canvas);
-        if (this.bitmap != null) {
+//        if (this.bitmap != null) {
             Log.d(TAG, "onDraw: " + bitmap);
             canvas.drawBitmap(this.bitmap, 0, 0, paint);
-            this.bitmap = null;
-            Log.d(TAG, "onDraw: " + bitmap);
-        }
+        Log.d(TAG, "onDraw: drawn" + bitmap);
+//            this.bitmap = null;
+//            Log.d(TAG, "onDraw: " + bitmap);
+//        }
+
         canvas.drawPath(path, paint);
 
 

@@ -29,11 +29,11 @@ public static final String TAG = "**********************";
         btnsave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                View content = drawing_canvas;
-                content.setDrawingCacheEnabled(true);
-                content.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
-                Bitmap bitmap = content.getDrawingCache();
+
+                Bitmap bitmap = drawing_canvas.getBitmap();
+
                 Log.d(TAG, "onClick: " + bitmap);
+
                 ByteArrayOutputStream stream = new ByteArrayOutputStream();
                 bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
                 byte[] bitmapdata = stream.toByteArray();
@@ -43,7 +43,7 @@ public static final String TAG = "**********************";
                 try {
                     Bitmap dbitmap = deserialize(bitmapdata);
                     Log.d(TAG, "onClick:"+ dbitmap);
-                    drawing_canvas.updateCanvas(dbitmap);
+                    drawing_canvas.drawFromBitmap(dbitmap);
                     Log.d(TAG, "onClick: called update" );
                 } catch (IOException e) {
                     e.printStackTrace();
