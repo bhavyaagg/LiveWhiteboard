@@ -31,18 +31,19 @@ public class Drawing extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_drawing);
+        drawingCanvas = findViewById(R.id.drawing_canvas);
 
         Log.d(TAG, "onCreate: " + getIntent());
         Intent i = getIntent();
         Log.d(TAG, "onCreate: " + i.hasExtra("sessionId"));
         if (i.hasExtra("sessionId")) {
             socket = ((SocketHandler) getApplication()).getSocket();
+            drawingCanvas.setEmitTo("drawingInSession");
             Log.d(TAG, "onCreate: Before");
             socket.on("drawingInSession", new Emitter.Listener() {
                 @Override
                 public void call(Object... args) {
                     Log.d(TAG, "onCreate: In");
-                    drawingCanvas.setEmitTo("drawingInSession");
                     drawingCanvas.drawFromServer((JSONObject) args[0]);
                 }
             });
@@ -58,7 +59,6 @@ public class Drawing extends AppCompatActivity {
         ibSave = findViewById(R.id.ibSave);
         ibClear = findViewById(R.id.ibClear);
 
-        drawingCanvas = findViewById(R.id.drawing_canvas);
         ibSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

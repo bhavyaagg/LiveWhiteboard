@@ -187,6 +187,7 @@ public class CanvasView extends View {
 //            e.printStackTrace();
 //        }
         path.lineTo(mX, mY);
+        emitToServer(x, y);
     }
 
     @Override
@@ -235,6 +236,22 @@ public class CanvasView extends View {
 
     public void setEmitTo(String emitTo) {
         this.emitTo = emitTo;
+    }
+
+    private void emitToServer(float x, float y) {
+        Log.d(TAG, "emitToServer: Trying");
+
+        JSONObject jsonObject = null;
+        try {
+            jsonObject = getJsonObject(x, y);
+            if (this.emitTo != null) {
+                Log.d(TAG, "emitToServer: ");
+                socket.emit(this.emitTo, jsonObject);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
     }
 
     public void drawFromServer(JSONObject jsonObject) {
