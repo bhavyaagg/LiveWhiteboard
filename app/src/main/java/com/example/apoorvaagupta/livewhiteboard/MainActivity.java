@@ -43,7 +43,8 @@ public class MainActivity extends AppCompatActivity {
         openExistingDrawing.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent i = new Intent(MainActivity.this, SavedDrawings.class);
+                startActivity(i);
             }
         });
     }

@@ -1,5 +1,6 @@
 package com.example.apoorvaagupta.livewhiteboard;
 
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -39,6 +40,12 @@ CanvasView drawingCanvas;
         ibClear = findViewById(R.id.ibClear);
 
         drawingCanvas = findViewById(R.id.drawing_canvas);
+
+        DatabaseHandler dbHelper = new DatabaseHandler(this);
+
+        final SQLiteDatabase writeDb = dbHelper.getWritableDatabase();
+        final SQLiteDatabase readDb = dbHelper.getReadableDatabase();
+
         ibSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -51,18 +58,18 @@ CanvasView drawingCanvas;
                 bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
                 byte[] bitmapdata = stream.toByteArray();
 
-                drawingCanvas.clearCanvas();
+                DrawingsTable.insertDrawing("Drawing",bitmapdata, writeDb);
 
-                try {
-                    Bitmap dbitmap = deserialize(bitmapdata);
-//                    Log.d(TAG, "onClick:"+ dbitmap);
-                    drawingCanvas.drawFromBitmap(dbitmap);
-//                    Log.d(TAG, "onClick: called update" );
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
-                }
+//                try {
+//                    Bitmap dbitmap = deserialize(bitmapdata);
+////                    Log.d(TAG, "onClick:"+ dbitmap);
+//                    drawingCanvas.drawFromBitmap(dbitmap);
+////                    Log.d(TAG, "onClick: called update" );
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                } catch (ClassNotFoundException e) {
+//                    e.printStackTrace();
+//                }
 
 //                String path = Environment.getExternalStorageDirectory().getAbsolutePath();
 //                Log.d(TAG, "onClick: " + path);
