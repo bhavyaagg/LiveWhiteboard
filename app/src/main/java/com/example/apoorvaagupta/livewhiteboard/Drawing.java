@@ -9,11 +9,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.Toast;
 
 import org.json.JSONObject;
@@ -32,7 +30,7 @@ public class Drawing extends AppCompatActivity {
 
     Socket socket;
 
-    private String drawingType;
+    private String drawingType = "drawing";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +73,7 @@ public class Drawing extends AppCompatActivity {
         }
 
         if (i.hasExtra("drawingId")) {
+            this.drawingType = "updateDrawing";
             Log.d(TAG, "onCreate: *******" + i.getIntExtra("drawingId", 1));
             Log.d(TAG, "onCreate: " + (DrawingsTable.getDrawing(i.getIntExtra("drawingId", 1), readDb)).getId());
             Log.d(TAG, "onCreate: " + (DrawingsTable.getDrawing(i.getIntExtra("drawingId", 1), readDb)).getName());
@@ -208,16 +207,28 @@ public class Drawing extends AppCompatActivity {
     public void onBackPressed() {
 //        super.onBackPressed();
         Log.d(TAG, "onBackPressed: ");
-        new AlertDialog.Builder(this)
-                .setTitle("Are You Sure")
-                .setMessage("You wanna discard your master piece?")
-                .setPositiveButton("Discard", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Log.d(TAG, "onClick: YES");
-                        finish();
-                    }
-                })
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(this)
+                .setTitle("Are You Sure");
+        switch (this.drawingType) {
+            case "session":
+                alertDialog.setMessage("You wanna discard your master piece?");
+                break;
+            case "drawing":
+                alertDialog.setMessage("You wanna discard your master piece?");
+                break;
+            case "updateDrawing":
+                alertDialog.setMessage("You wanna discard your master piece?");
+                break;
+
+        }
+
+        alertDialog.setPositiveButton("Discard", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Log.d(TAG, "onClick: YES");
+                finish();
+            }
+        })
                 .setNegativeButton("No", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
