@@ -60,7 +60,7 @@ public class CanvasView extends View {
 //        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
 //        invalidate();
         paint.setColor(Color.WHITE);
-        paint.setStrokeWidth(14f);
+        paint.setStrokeWidth(50f);
     }
 
     public Bitmap getBitmap() {
