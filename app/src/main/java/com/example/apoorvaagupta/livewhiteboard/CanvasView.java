@@ -58,6 +58,9 @@ public class CanvasView extends View {
 
     public void setEraser() {
 //        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
+//        invalidate();
+        paint.setColor(Color.WHITE);
+        paint.setStrokeWidth(14f);
     }
 
     public Bitmap getBitmap() {
@@ -104,12 +107,13 @@ public class CanvasView extends View {
 //            Log.d(TAG, "onDraw: " + bitmap);
 //        }
 
-        canvas.drawPath(path, paint);
+
 
 
         for (Stroke s : allStrokes) {
             canvas.drawPath(s.getPath(), s.getPaint());
         }
+        canvas.drawPath(path, paint);
 
 
     }
