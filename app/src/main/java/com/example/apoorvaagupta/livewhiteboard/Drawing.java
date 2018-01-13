@@ -1,6 +1,9 @@
 package com.example.apoorvaagupta.livewhiteboard;
 
 import android.content.DialogInterface;
+import android.support.v7.app.AppCompatActivity;
+import android.widget.ImageButton;
+import android.database.sqlite.SQLiteDatabase;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -35,6 +38,23 @@ public class Drawing extends AppCompatActivity {
         setContentView(R.layout.activity_drawing);
         drawingCanvas = findViewById(R.id.drawing_canvas);
 
+        ibBlack = findViewById(R.id.ibBlack);
+        ibRed = findViewById(R.id.ibRed);
+        ibGreen = findViewById(R.id.ibGreen);
+        ibBlue = findViewById(R.id.ibBlue);
+        ibEraser = findViewById(R.id.ibEraser);
+        ibSave = findViewById(R.id.ibSave);
+        ibClear = findViewById(R.id.ibClear);
+
+        drawingCanvas = findViewById(R.id.drawing_canvas);
+
+        DatabaseHandler dbHelper = new DatabaseHandler(this);
+
+        final SQLiteDatabase writeDb = dbHelper.getWritableDatabase();
+        final SQLiteDatabase readDb = dbHelper.getReadableDatabase();
+
+
+
         Log.d(TAG, "onCreate: " + getIntent());
         Intent i = getIntent();
         Log.d(TAG, "onCreate: " + i.hasExtra("sessionId"));
@@ -53,14 +73,22 @@ public class Drawing extends AppCompatActivity {
             Toast.makeText(this, i.getStringExtra("sessionId"), Toast.LENGTH_SHORT).show();
         }
 
-
-        ibBlack = findViewById(R.id.ibBlack);
-        ibRed = findViewById(R.id.ibRed);
-        ibGreen = findViewById(R.id.ibGreen);
-        ibBlue = findViewById(R.id.ibBlue);
-        ibEraser = findViewById(R.id.ibEraser);
-        ibSave = findViewById(R.id.ibSave);
-        ibClear = findViewById(R.id.ibClear);
+        if(i.hasExtra("drawingId")){
+            Log.d(TAG, "onCreate: *******"+ i.getIntExtra("drawingId",1));
+            Log.d(TAG, "onCreate: " +(DrawingsTable.getDrawing(i.getIntExtra("drawingId",1),readDb)).getId() );
+            Log.d(TAG, "onCreate: "+ (DrawingsTable.getDrawing(i.getIntExtra("drawingId",1),readDb)).getName());
+            byte[] bitmapdata = (DrawingsTable.getDrawing(i.getIntExtra("drawingId",1),readDb)).getDrawing();
+            try {
+                    Bitmap dbitmap = deserialize(bitmapdata);
+                    Log.d(TAG, "onClick:"+ dbitmap);
+                    drawingCanvas.drawFromBitmap(dbitmap);
+//                    Log.d(TAG, "onClick: called update" );
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+        }
 
         ibSave.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,18 +102,18 @@ public class Drawing extends AppCompatActivity {
                 bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
                 byte[] bitmapdata = stream.toByteArray();
 
-                drawingCanvas.clearCanvas();
+                DrawingsTable.insertDrawing("Drawing",bitmapdata, writeDb);
 
-                try {
-                    Bitmap dbitmap = deserialize(bitmapdata);
-//                    Log.d(TAG, "onClick:"+ dbitmap);
-                    drawingCanvas.drawFromBitmap(dbitmap);
-//                    Log.d(TAG, "onClick: called update" );
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
-                }
+//                try {
+//                    Bitmap dbitmap = deserialize(bitmapdata);
+////                    Log.d(TAG, "onClick:"+ dbitmap);
+//                    drawingCanvas.drawFromBitmap(dbitmap);
+////                    Log.d(TAG, "onClick: called update" );
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                } catch (ClassNotFoundException e) {
+//                    e.printStackTrace();
+//                }
 
 //                String path = Environment.getExternalStorageDirectory().getAbsolutePath();
 //                Log.d(TAG, "onClick: " + path);
