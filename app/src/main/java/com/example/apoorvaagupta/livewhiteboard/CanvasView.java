@@ -54,6 +54,8 @@ public class CanvasView extends View {
 
     public void changeColor(int color) {
         paint.setColor(color);
+        paint.setStrokeWidth(4f);
+
     }
 
     public void setEraser() {
