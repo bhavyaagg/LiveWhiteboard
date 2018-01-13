@@ -32,11 +32,12 @@ public class Drawing extends AppCompatActivity {
 
     Socket socket;
 
+    private String drawingType;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_drawing);
-        drawingCanvas = findViewById(R.id.drawing_canvas);
 
         ibBlack = findViewById(R.id.ibBlack);
         ibRed = findViewById(R.id.ibRed);
@@ -58,6 +59,7 @@ public class Drawing extends AppCompatActivity {
         Intent i = getIntent();
         Log.d(TAG, "onCreate: " + i.hasExtra("sessionId"));
         if (i.hasExtra("sessionId")) {
+            this.drawingType = "session";
             socket = ((SocketHandler) getApplication()).getSocket();
             drawingCanvas.setEmitTo("drawingInSession");
             drawingCanvas.setSessionId(i.getStringExtra("sessionId"));
