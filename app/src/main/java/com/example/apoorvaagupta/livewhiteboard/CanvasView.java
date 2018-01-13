@@ -237,6 +237,9 @@ public class CanvasView extends View {
             case Color.BLACK:
                 color = "black";
                 break;
+            case Color.WHITE:
+                color = "white";
+                break;
             case Color.RED:
                 color = "red";
                 break;
@@ -248,6 +251,7 @@ public class CanvasView extends View {
                 break;
         }
         jsonObject.put("color", color);
+        jsonObject.put("strokeWidth", paint.getStrokeWidth());
         return jsonObject;
     }
 
@@ -292,6 +296,9 @@ public class CanvasView extends View {
                 case "black":
                     color = Color.BLACK;
                     break;
+                case "white":
+                    color = Color.WHITE;
+                    break;
                 case "red":
                     color = Color.RED;
                     break;
@@ -306,6 +313,7 @@ public class CanvasView extends View {
                     break;
             }
             paint.setColor(color);
+            paint.setStrokeWidth((float) jsonObject.getDouble("strokeWidth"));
             allStrokes.add(new Stroke(path, paint));
             path = new Path();
             createPaintObject(paint.getColor(), paint.getStrokeWidth());
