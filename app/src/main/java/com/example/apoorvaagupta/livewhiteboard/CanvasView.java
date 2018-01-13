@@ -116,6 +116,7 @@ public class CanvasView extends View {
 
     public void clearCanvas() {
         path.reset();
+        allStrokes.clear();
         bitmap = Bitmap.createBitmap(getWidth(), getHeight(), Bitmap.Config.ARGB_8888);
         canvas = new Canvas(bitmap);
         invalidate();
