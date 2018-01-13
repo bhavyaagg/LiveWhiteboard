@@ -286,6 +286,26 @@ public class CanvasView extends View {
             float y1 = (float) jsonObject.getDouble("y1");
             path.moveTo(x0 * getWidth(), y0 * getHeight());
             path.lineTo(x1 * getWidth(), y1 * getHeight());
+
+            int color = 0;
+            switch (jsonObject.getString("color")) {
+                case "black":
+                    color = Color.BLACK;
+                    break;
+                case "red":
+                    color = Color.RED;
+                    break;
+                case "blue":
+                    color = Color.BLUE;
+                    break;
+                case "green":
+                    color = Color.GREEN;
+                    break;
+                case "yellow":
+                    color = Color.YELLOW;
+                    break;
+            }
+            paint.setColor(color);
             allStrokes.add(new Stroke(path, paint));
             path = new Path();
             createPaintObject(paint.getColor(), paint.getStrokeWidth());
