@@ -48,7 +48,7 @@ public class CanvasView extends View {
         this.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
         path = new Path();
 
-        createPaintObject(Color.BLACK);
+        createPaintObject(Color.BLACK,4f);
 
     }
 
@@ -106,7 +106,6 @@ public class CanvasView extends View {
 //            this.bitmap = null;
 //            Log.d(TAG, "onDraw: " + bitmap);
 //        }
-
 
 
         for (Stroke s : allStrokes) {
@@ -187,14 +186,14 @@ public class CanvasView extends View {
                 upTouch(x, y);
                 allStrokes.add(new Stroke(path, paint));
                 path = new Path();
-                createPaintObject(paint.getColor());
+                createPaintObject(paint.getColor(), paint.getStrokeWidth());
                 invalidate();
                 break;
         }
         return true;
     }
 
-    private void createPaintObject(int color) {
+    private void createPaintObject(int color, float strokeWidth) {
         paint = new Paint();
         paint.setAntiAlias(true);
         paint.setColor(color);
