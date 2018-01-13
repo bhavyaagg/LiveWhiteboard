@@ -211,7 +211,7 @@ public class Drawing extends AppCompatActivity {
                 .setTitle("Are You Sure");
         switch (this.drawingType) {
             case "session":
-                alertDialog.setMessage("You wanna discard your master piece?");
+                alertDialog.setMessage("You wanna leave this session?");
                 break;
             case "drawing":
                 alertDialog.setMessage("You wanna discard your master piece?");
@@ -222,7 +222,7 @@ public class Drawing extends AppCompatActivity {
 
         }
 
-        alertDialog.setPositiveButton("Discard", new DialogInterface.OnClickListener() {
+        alertDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 Log.d(TAG, "onClick: YES");
