@@ -109,7 +109,6 @@ public class CanvasView extends View {
 
 
 
-
         for (Stroke s : allStrokes) {
             canvas.drawPath(s.getPath(), s.getPaint());
         }
