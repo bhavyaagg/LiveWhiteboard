@@ -199,7 +199,7 @@ public class CanvasView extends View {
         paint.setColor(color);
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeJoin(Paint.Join.ROUND);
-        paint.setStrokeWidth(4f);
+        paint.setStrokeWidth(strokeWidth);
     }
 
     private JSONObject getJsonObject(float x, float y) throws JSONException {
