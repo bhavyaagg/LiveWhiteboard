@@ -39,6 +39,7 @@ public class Drawing extends AppCompatActivity {
         if (i.hasExtra("sessionId")) {
             socket = ((SocketHandler) getApplication()).getSocket();
             drawingCanvas.setEmitTo("drawingInSession");
+            drawingCanvas.setSessionId(i.getStringExtra("sessionId"));
             Log.d(TAG, "onCreate: Before");
             socket.on("drawingInSession", new Emitter.Listener() {
                 @Override
