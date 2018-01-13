@@ -1,35 +1,60 @@
 package com.example.apoorvaagupta.livewhiteboard;
 
+import android.support.v7.app.AppCompatActivity;
+import android.widget.ImageButton;
 import android.database.sqlite.SQLiteDatabase;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
-import java.io.ByteArrayInputStream;
+import org.json.JSONObject;
+
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
+
+import io.socket.client.Socket;
+import io.socket.emitter.Emitter;
 
 public class Drawing extends AppCompatActivity {
-public static final String TAG = "drawing";
+    public static final String TAG = "drawing";
 
-ImageButton ibBlack, ibRed, ibGreen, ibBlue, ibEraser, ibSave, ibClear;
-CanvasView drawingCanvas;
+    ImageButton ibBlack, ibRed, ibGreen, ibBlue, ibEraser, ibSave, ibClear;
+    CanvasView drawingCanvas;
+
+    Socket socket;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_drawing);
+        drawingCanvas = findViewById(R.id.drawing_canvas);
+
+        Log.d(TAG, "onCreate: " + getIntent());
+        Intent i = getIntent();
+        Log.d(TAG, "onCreate: " + i.hasExtra("sessionId"));
+        if (i.hasExtra("sessionId")) {
+            socket = ((SocketHandler) getApplication()).getSocket();
+            drawingCanvas.setEmitTo("drawingInSession");
+            drawingCanvas.setSessionId(i.getStringExtra("sessionId"));
+            Log.d(TAG, "onCreate: Before");
+            socket.on("drawingInSession", new Emitter.Listener() {
+                @Override
+                public void call(Object... args) {
+                    Log.d(TAG, "onCreate: In");
+                    drawingCanvas.drawFromServer((JSONObject) args[0]);
+                }
+            });
+            Toast.makeText(this, i.getStringExtra("sessionId"), Toast.LENGTH_SHORT).show();
+        }
+
+
 
         ibBlack = findViewById(R.id.ibBlack);
         ibRed = findViewById(R.id.ibRed);
@@ -88,15 +113,12 @@ CanvasView drawingCanvas;
 //                }
 
 
-
-
 //                bitmap =  Bitmap.createBitmap (content.getWidth(), content.getHeight(), Bitmap.Config.RGB_565);;
 //                Canvas canvas = new Canvas(mBitmap);
 //                v.draw(canvas);
 //                ByteArrayOutputStream stream = new ByteArrayOutputStream();
 //                mBitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
 //                byte[] bitmapdata = stream.toByteArray();
-
 
 
             }
@@ -145,8 +167,8 @@ CanvasView drawingCanvas;
         });
 
 
-
     }
+
     private static Bitmap deserialize(byte[] data) throws IOException, ClassNotFoundException {
 //        ByteArrayInputStream in = new ByteArrayInputStream(data);
 //        ObjectInputStream is = null;

@@ -1,14 +1,12 @@
 package com.example.apoorvaagupta.livewhiteboard;
 
-import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffXfermode;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -18,7 +16,7 @@ import android.view.View;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import io.socket.client.Socket;
 
@@ -34,12 +32,14 @@ public class CanvasView extends View {
     private Bitmap bitmap;
     private Canvas canvas;
     private Path path;
-    private ArrayList<Stroke> allStrokes = new ArrayList<>();
+    private CopyOnWriteArrayList<Stroke> allStrokes = new CopyOnWriteArrayList<>();
     Context context;
     private Paint paint;
     private Socket socket;
     private float mX = 0, mY = 0;
     private static final float TOLERANCE = 5;
+    private String emitTo;
+    private String sessionId;
 
     public CanvasView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
@@ -47,15 +47,35 @@ public class CanvasView extends View {
         this.setDrawingCacheEnabled(true);
         this.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
         path = new Path();
+        socket = ((SocketHandler) ((Activity) context).getApplication()).getSocket();
 
-        createPaintObject(Color.BLACK,4f);
+        createPaintObject(Color.BLACK, 4f);
 
+    }
+
+    public class Stroke {
+        private Path path;
+
+        private Paint paint;
+
+        public Stroke(Path path, Paint paint) {
+
+            this.path = path;
+            this.paint = paint;
+        }
+
+        public Path getPath() {
+            return path;
+        }
+
+        public Paint getPaint() {
+            return paint;
+        }
     }
 
     public void changeColor(int color) {
         paint.setColor(color);
         paint.setStrokeWidth(4f);
-
     }
 
     public void setEraser() {
@@ -134,10 +154,11 @@ public class CanvasView extends View {
 //        } catch (JSONException e) {
 //            e.printStackTrace();
 //        }
-
         path.moveTo(x, y);
         mX = x;
         mY = y;
+        emitToServer(x, y);
+
     }
 
     // when ACTION_MOVE move touch according to the x,y values
@@ -151,7 +172,7 @@ public class CanvasView extends View {
         float dx = Math.abs(x - mX);
         float dy = Math.abs(y - mY);
         if (dx >= TOLERANCE || dy >= TOLERANCE) {
-
+            emitToServer(x, y);
             path.quadTo(mX, mY, (x + mX) / 2, (y + mY) / 2);
             mX = x;
             mY = y;
@@ -167,6 +188,7 @@ public class CanvasView extends View {
 //        } catch (JSONException e) {
 //            e.printStackTrace();
 //        }
+        emitToServer(x, y);
         path.lineTo(mX, mY);
     }
 
@@ -210,30 +232,67 @@ public class CanvasView extends View {
         jsonObject.put("y0", mY / getHeight());
         jsonObject.put("x1", x / getWidth());
         jsonObject.put("y1", y / getHeight());
-
+        String color = "";
+        switch (paint.getColor()) {
+            case Color.BLACK:
+                color = "black";
+                break;
+            case Color.RED:
+                color = "red";
+                break;
+            case Color.BLUE:
+                color = "blue";
+                break;
+            case Color.GREEN:
+                color = "green";
+                break;
+        }
+        jsonObject.put("color", color);
         return jsonObject;
     }
 
-    public class Stroke {
-        private Path path;
+    public void setEmitTo(String emitTo) {
+        this.emitTo = emitTo;
+    }
 
-        private Paint paint;
+    public void setSessionId(String sessionId) {
+        this.sessionId = sessionId;
+    }
 
-        public Stroke(Path path, Paint paint) {
 
-            this.path = path;
-            this.paint = paint;
+    private void emitToServer(float x, float y) {
+        Log.d(TAG, "emitToServer: Trying");
+
+        JSONObject jsonObject = null;
+        try {
+            jsonObject = getJsonObject(x, y);
+            if (this.emitTo == "drawingInSession") {
+                Log.d(TAG, "emitToServer: " + this.emitTo);
+                jsonObject.put("sessionId", this.sessionId);
+                socket.emit(this.emitTo, jsonObject);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
 
-        public Path getPath() {
-            return path;
+    }
+
+    public void drawFromServer(JSONObject jsonObject) {
+        try {
+            Log.d(TAG, "drawFromServer: Trying");
+            float x0 = (float) jsonObject.getDouble("x0");
+            float y0 = (float) jsonObject.getDouble("y0");
+            float x1 = (float) jsonObject.getDouble("x1");
+            float y1 = (float) jsonObject.getDouble("y1");
+            path.moveTo(x0 * getWidth(), y0 * getHeight());
+            path.lineTo(x1 * getWidth(), y1 * getHeight());
+            allStrokes.add(new Stroke(path, paint));
+            path = new Path();
+            createPaintObject(paint.getColor(), paint.getStrokeWidth());
+            invalidate();
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
-
-        public Paint getPaint() {
-            return paint;
-        }
-
-
     }
 
 }
