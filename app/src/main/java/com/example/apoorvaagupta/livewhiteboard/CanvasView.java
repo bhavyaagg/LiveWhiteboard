@@ -48,7 +48,7 @@ public class CanvasView extends View {
         this.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
         path = new Path();
 
-        createPaintObject();
+        createPaintObject(Color.BLACK);
 
     }
 
@@ -184,17 +184,17 @@ public class CanvasView extends View {
                 upTouch(x, y);
                 allStrokes.add(new Stroke(path, paint));
                 path = new Path();
-                createPaintObject();
+                createPaintObject(paint.getColor());
                 invalidate();
                 break;
         }
         return true;
     }
 
-    private void createPaintObject() {
+    private void createPaintObject(int color) {
         paint = new Paint();
         paint.setAntiAlias(true);
-        paint.setColor(Color.BLACK);
+        paint.setColor(color);
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeJoin(Paint.Join.ROUND);
         paint.setStrokeWidth(4f);
