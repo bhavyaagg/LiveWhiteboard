@@ -39,6 +39,7 @@ public class CanvasView extends View {
     private float mX = 0, mY = 0;
     private static final float TOLERANCE = 5;
     private String emitTo;
+    private String sessionId;
 
     public CanvasView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
@@ -153,10 +154,11 @@ public class CanvasView extends View {
 //        } catch (JSONException e) {
 //            e.printStackTrace();
 //        }
-
         path.moveTo(x, y);
         mX = x;
         mY = y;
+        emitToServer(x, y);
+
     }
 
     // when ACTION_MOVE move touch according to the x,y values
@@ -170,7 +172,7 @@ public class CanvasView extends View {
         float dx = Math.abs(x - mX);
         float dy = Math.abs(y - mY);
         if (dx >= TOLERANCE || dy >= TOLERANCE) {
-
+            emitToServer(x, y);
             path.quadTo(mX, mY, (x + mX) / 2, (y + mY) / 2);
             mX = x;
             mY = y;
@@ -186,8 +188,8 @@ public class CanvasView extends View {
 //        } catch (JSONException e) {
 //            e.printStackTrace();
 //        }
-        path.lineTo(mX, mY);
         emitToServer(x, y);
+        path.lineTo(mX, mY);
     }
 
     @Override
@@ -230,7 +232,22 @@ public class CanvasView extends View {
         jsonObject.put("y0", mY / getHeight());
         jsonObject.put("x1", x / getWidth());
         jsonObject.put("y1", y / getHeight());
-
+        String color = "";
+        switch (paint.getColor()) {
+            case Color.BLACK:
+                color = "black";
+                break;
+            case Color.RED:
+                color = "red";
+                break;
+            case Color.BLUE:
+                color = "blue";
+                break;
+            case Color.GREEN:
+                color = "green";
+                break;
+        }
+        jsonObject.put("color", color);
         return jsonObject;
     }
 
@@ -238,14 +255,20 @@ public class CanvasView extends View {
         this.emitTo = emitTo;
     }
 
+    public void setSessionId(String sessionId) {
+        this.sessionId = sessionId;
+    }
+
+
     private void emitToServer(float x, float y) {
         Log.d(TAG, "emitToServer: Trying");
 
         JSONObject jsonObject = null;
         try {
             jsonObject = getJsonObject(x, y);
-            if (this.emitTo != null) {
-                Log.d(TAG, "emitToServer: ");
+            if (this.emitTo == "drawingInSession") {
+                Log.d(TAG, "emitToServer: " + this.emitTo);
+                jsonObject.put("sessionId", this.sessionId);
                 socket.emit(this.emitTo, jsonObject);
             }
         } catch (JSONException e) {
