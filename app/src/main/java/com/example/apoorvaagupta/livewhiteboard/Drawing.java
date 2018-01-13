@@ -54,7 +54,6 @@ public class Drawing extends AppCompatActivity {
         final SQLiteDatabase readDb = dbHelper.getReadableDatabase();
 
 
-
         Log.d(TAG, "onCreate: " + getIntent());
         Intent i = getIntent();
         Log.d(TAG, "onCreate: " + i.hasExtra("sessionId"));
@@ -73,21 +72,21 @@ public class Drawing extends AppCompatActivity {
             Toast.makeText(this, i.getStringExtra("sessionId"), Toast.LENGTH_SHORT).show();
         }
 
-        if(i.hasExtra("drawingId")){
-            Log.d(TAG, "onCreate: *******"+ i.getIntExtra("drawingId",1));
-            Log.d(TAG, "onCreate: " +(DrawingsTable.getDrawing(i.getIntExtra("drawingId",1),readDb)).getId() );
-            Log.d(TAG, "onCreate: "+ (DrawingsTable.getDrawing(i.getIntExtra("drawingId",1),readDb)).getName());
-            byte[] bitmapdata = (DrawingsTable.getDrawing(i.getIntExtra("drawingId",1),readDb)).getDrawing();
+        if (i.hasExtra("drawingId")) {
+            Log.d(TAG, "onCreate: *******" + i.getIntExtra("drawingId", 1));
+            Log.d(TAG, "onCreate: " + (DrawingsTable.getDrawing(i.getIntExtra("drawingId", 1), readDb)).getId());
+            Log.d(TAG, "onCreate: " + (DrawingsTable.getDrawing(i.getIntExtra("drawingId", 1), readDb)).getName());
+            byte[] bitmapdata = (DrawingsTable.getDrawing(i.getIntExtra("drawingId", 1), readDb)).getDrawing();
             try {
-                    Bitmap dbitmap = deserialize(bitmapdata);
-                    Log.d(TAG, "onClick:"+ dbitmap);
-                    drawingCanvas.drawFromBitmap(dbitmap);
+                Bitmap dbitmap = deserialize(bitmapdata);
+                Log.d(TAG, "onClick:" + dbitmap);
+                drawingCanvas.drawFromBitmap(dbitmap);
 //                    Log.d(TAG, "onClick: called update" );
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
-                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
         }
 
         ibSave.setOnClickListener(new View.OnClickListener() {
@@ -102,7 +101,7 @@ public class Drawing extends AppCompatActivity {
                 bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
                 byte[] bitmapdata = stream.toByteArray();
 
-                DrawingsTable.insertDrawing("Drawing",bitmapdata, writeDb);
+                DrawingsTable.insertDrawing("Drawing", bitmapdata, writeDb);
 
 //                try {
 //                    Bitmap dbitmap = deserialize(bitmapdata);

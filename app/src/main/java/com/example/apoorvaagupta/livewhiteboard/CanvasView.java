@@ -103,7 +103,7 @@ public class CanvasView extends View {
 //        canvas.drawBitmap(mutableBitmap,0,0,paint);
 //        canvas = new Canvas(mutableBitmap);
 //        Log.d(TAG, "updateCanvas: ");
-        Log.d(TAG, "drawFromBitmap: "+ this.bitmap);
+        Log.d(TAG, "drawFromBitmap: " + this.bitmap);
 //        super.onDraw(canvas);
         invalidate();
     }
@@ -112,7 +112,7 @@ public class CanvasView extends View {
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
         Log.d(TAG, "onSizeChanged: " + this.bitmap);
-        if(this.bitmap == null)
+        if (this.bitmap == null)
             this.bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
         canvas = new Canvas(this.bitmap);
     }
@@ -122,7 +122,7 @@ public class CanvasView extends View {
 
         super.onDraw(canvas);
 //        if (this.bitmap != null) {
-            Log.d(TAG, "onDraw: " + bitmap);
+        Log.d(TAG, "onDraw: " + bitmap);
         canvas.drawBitmap(this.bitmap, 0, 0, paint);
 
         Log.d(TAG, "onDraw: drawn" + bitmap);
