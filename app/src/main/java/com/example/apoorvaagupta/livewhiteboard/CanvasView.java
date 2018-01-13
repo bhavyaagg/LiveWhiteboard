@@ -104,13 +104,13 @@ public class CanvasView extends View {
 //            Log.d(TAG, "onDraw: " + bitmap);
 //        }
 
-        canvas.drawPath(path, paint);
 
 
         for (Stroke s : allStrokes) {
             canvas.drawPath(s.getPath(), s.getPaint());
         }
 
+        canvas.drawPath(path, paint);
 
     }
 
