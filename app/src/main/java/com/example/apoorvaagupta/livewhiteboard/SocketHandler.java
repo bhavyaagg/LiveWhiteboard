@@ -1,5 +1,7 @@
 package com.example.apoorvaagupta.livewhiteboard;
 
+import android.app.Application;
+
 import java.net.URISyntaxException;
 
 import io.socket.client.IO;
@@ -9,7 +11,7 @@ import io.socket.client.Socket;
  * Created by bhavyaaggarwal on 13/01/18.
  */
 
-public class SocketHandler {
+public class SocketHandler extends Application {
     private Socket socket;
 
     {

@@ -6,13 +6,22 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
+import io.socket.client.Socket;
+
 public class MainActivity extends AppCompatActivity {
     TextView startNewSession, joinExistingSession, createNewDrawing, openExistingDrawing;
+
+    Socket socket;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        SocketHandler app = (SocketHandler) getApplication();
+        socket = app.getSocket();
+
+
         startNewSession = findViewById(R.id.tvStartNewSession);
         joinExistingSession = findViewById(R.id.tvJoinExistingSession);
         createNewDrawing = findViewById(R.id.tvCreateNewDrawing);
