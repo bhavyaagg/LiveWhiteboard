@@ -233,7 +233,9 @@ public class CanvasView extends View {
         return jsonObject;
     }
 
-
+    public void setEmitTo(String emitTo) {
+        this.emitTo = emitTo;
+    }
 
     public void drawFromServer(JSONObject jsonObject) {
         try {

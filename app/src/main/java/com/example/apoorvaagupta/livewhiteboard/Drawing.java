@@ -42,6 +42,7 @@ public class Drawing extends AppCompatActivity {
                 @Override
                 public void call(Object... args) {
                     Log.d(TAG, "onCreate: In");
+                    drawingCanvas.setEmitTo("drawingInSession");
                     drawingCanvas.drawFromServer((JSONObject) args[0]);
                 }
             });
