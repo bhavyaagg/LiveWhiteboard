@@ -73,4 +73,29 @@ public class DrawingsTable {
 
         return drawings;
     }
+
+    public static DrawingModel getDrawing(int id, SQLiteDatabase db){
+
+        Cursor c = db.query(
+                TABLE_NAME,
+                new String[]{Columns.ID, Columns.NAME, Columns.DRAWINGS},
+                "id = ?",
+                new String[]{String.valueOf(id)},
+                null,
+                null,
+                null
+                );
+
+        int nameIndex = c.getColumnIndex(Columns.NAME);
+        int idIndex = c.getColumnIndex(Columns.ID);
+        int drawingIndex = c.getColumnIndex(Columns.DRAWINGS);
+
+        c.moveToFirst();
+
+        return new DrawingModel(
+                c.getInt(idIndex),
+                c.getString(nameIndex),
+                c.getBlob(drawingIndex)
+        );
+    }
 }

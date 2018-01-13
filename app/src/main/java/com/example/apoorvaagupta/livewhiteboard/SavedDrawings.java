@@ -39,7 +39,7 @@ public class SavedDrawings extends AppCompatActivity {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         Intent i = new Intent(SavedDrawings.this, Drawing.class);
-                        i.putExtra("id", adapter.getItem(position).getId());
+                        i.putExtra("drawingId", adapter.getItem(position).getId());
                         startActivity(i);
                     }
                 }
