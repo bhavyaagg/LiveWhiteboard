@@ -27,7 +27,7 @@ import io.socket.emitter.Emitter;
 public class Drawing extends AppCompatActivity {
     public static final String TAG = "drawing";
 
-    ImageButton ibBlack, ibRed, ibGreen, ibBlue, ibEraser, ibSave, ibClear;
+    ImageButton ibBlack, ibRed, ibGreen, ibBlue, ibYellow, ibEraser, ibSave, ibClear;
     CanvasView drawingCanvas;
 
     Socket socket;
@@ -43,6 +43,7 @@ public class Drawing extends AppCompatActivity {
         ibRed = findViewById(R.id.ibRed);
         ibGreen = findViewById(R.id.ibGreen);
         ibBlue = findViewById(R.id.ibBlue);
+        ibYellow = findViewById(R.id.ibYellow);
         ibEraser = findViewById(R.id.ibEraser);
         ibSave = findViewById(R.id.ibSave);
         ibClear = findViewById(R.id.ibClear);
@@ -104,6 +105,8 @@ public class Drawing extends AppCompatActivity {
                 byte[] bitmapdata = stream.toByteArray();
 
                 DrawingsTable.insertDrawing("Drawing", bitmapdata, writeDb);
+
+                Toast.makeText(Drawing.this, "Saved", Toast.LENGTH_SHORT).show();
 
 //                try {
 //                    Bitmap dbitmap = deserialize(bitmapdata);
@@ -169,6 +172,14 @@ public class Drawing extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 drawingCanvas.changeColor(Color.GREEN);
+            }
+        });
+
+
+        ibYellow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                drawingCanvas.changeColor(Color.YELLOW);
             }
         });
 

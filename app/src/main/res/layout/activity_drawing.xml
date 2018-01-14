@@ -47,6 +47,12 @@
             android:layout_weight="1"
             android:src="@drawable/ic_brush_green_700_36dp" />
         <ImageButton
+            android:id="@+id/ibYellow"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:src="@drawable/ic_brush_yellow_500_36dp" />
+        <ImageButton
             android:id="@+id/ibEraser"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
