@@ -16,7 +16,7 @@ public class SocketHandler extends Application {
 
     {
         try {
-            socket = IO.socket("http://192.168.1.4:3000/");
+            socket = IO.socket("http://192.168.0.90:3000/");
         } catch (URISyntaxException e) {
             throw new RuntimeException(e);
         }
